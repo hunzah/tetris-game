@@ -1,0 +1,19 @@
+body {
+    margin: 0;
+    background-color: black;
+}
+
+.root {
+    padding: 3 rem;
+    text-align: center;
+}
+
+.root h1 {
+    color:aliceblue
+}
+
+
+.root canvas{
+    display: block;
+    margin: 0 auto;
+}
