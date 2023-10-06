@@ -1,13 +1,13 @@
 export default class View {
     static colors = {
-        '1': 'cyan',
-        '2': 'blue',
-        '3': 'orange',
-        '4': 'yellow',
-        '5': 'green',
-        '6': 'violet',
-        '7': 'red'
-    }
+        'I': 'cyan',
+        'J': 'blue',
+        'L': 'orange',
+        'O': 'yellow',
+        'S': 'green',
+        'T': 'purple',
+        'Z': 'red'
+    };
 
     constructor({ element, width, height, rows, columns }) {
         this.element = element;
@@ -38,50 +38,123 @@ export default class View {
         this.element.appendChild(this.canvas);
     }
 
-    render(playfield){
-        this.clearScreen();
-        this.renderPlayfield(playfield)
-        this.renderPanel()
+    on(event, handler) {
+        document.addEventListener(event, handler);
     }
 
-    renderPlayfield( playfield ) {
-        this.clearScreen();
-        this.renderBlocks(playfield);
+    renderStartScreen() {
+        this.context.fillStyle = 'white';
+        this.context.font = '18px "Press Start 2P"';
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'middle';
+        this.context.fillText('Press ENTER to Start', this.width / 2, this.height / 2);
     }
 
-    clearScreen() {
-        this.context.clearRect(0, 0, this.width, this.height);
+    renderMainScreen(state) {
+        this._clearScreen();
+        this._renderPlayfield(state);
+        this._renderPanel(state);
+        this._renderBorder();
     }
 
-    renderBlocks(playfield) {
+    renderPauseScreen() {
+        this._clearScreen('rgba(0, 0, 0, 0.75)');
+
+        this.context.fillStyle = 'white';
+        this.context.font = '16px "Press Start 2P"';
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'middle';
+        this.context.fillText('PAUSE', this.width / 2, this.height / 2 - 48);
+        this.context.fillText('Press ENTER to Resume', this.width / 2, this.height / 2);
+    }
+
+    renderEndScreen({ score }) {
+        this._clearScreen();
+
+        this.context.fillStyle = 'white';
+        this.context.font = '18px "Press Start 2P"';
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'middle';
+        this.context.fillText('GAME OVER', this.width / 2, this.height / 2 - 48);
+        this.context.fillText(`Score: ${score}`, this.width / 2, this.height / 2);
+        this.context.fillText('Press ENTER to Restart', this.width / 2, this.height / 2 + 48);
+    }
+
+    _clearScreen(color = 'black') {
+        this.context.fillStyle = color;
+        this.context.fillRect(0, 0, this.width, this.height);
+    }
+
+    _renderBorder() {
+        this.context.strokeStyle = 'white';
+        this.context.lineWidth = this.playfieldBorderWidth;
+        this.context.strokeRect(0, 0, this.playfieldWidth, this.playfieldHeight);
+    }
+
+    _renderPlayfield({ playfield, activePiece }) {
         for (let y = 0; y < playfield.length; y++) {
             const line = playfield[y];
 
             for (let x = 0; x < line.length; x++) {
-                const block = line[x];
-
+                const block = playfield[y][x];
+                
                 if (block) {
-                    this.renderBlock(x * this.blockWidth, y * this.blockHeight, this.blockWidth, this.blockHeight, View.colors[block]);
+                    this._renderBlock({
+                        x: this.playfieldX + (x * this.blockWidth),
+                        y: this.playfieldY + (y * this.blockHeight),
+                        width: this.blockWidth,
+                        height: this.blockHeight,
+                        color: View.colors[block.type]
+                    });
                 }
+            }
+        }
+
+        this._renderPiece(activePiece, {
+            x: this.playfieldX,
+            y: this.playfieldY,
+            width: this.blockWidth,
+            height: this.blockHeight
+        });
+    }
+
+    _renderPanel({ level, score, lines, nextPiece }) {
+        this.context.textAlign = 'start';
+        this.context.textBaseline = 'top';
+        this.context.fillStyle = 'white';
+        this.context.font = '14px "Press Start 2P"';
+
+        this.context.fillText(`Level: ${level}`, this.panelX, this.panelY + 0);
+        this.context.fillText(`Score: ${score}`, this.panelX, this.panelY + 24);
+        this.context.fillText(`Lines: ${lines}`, this.panelX, this.panelY + 48);
+        this.context.fillText('Next:', this.panelX, this.panelY + 96);
+        
+        this._renderPiece(nextPiece, {
+            x: this.panelX,
+            y: this.panelY + 120,
+            width: this.blockWidth * 0.5,
+            height: this.blockHeight * 0.5
+        });
+    }
+
+    _renderPiece(piece, { x, y, width = this.blockWidth, height = this.blockHeight }) {
+        for (let block of piece) {
+            if (block) {
+                this._renderBlock({
+                    x: x + (block.x * width),
+                    y: y + (block.y * height),
+                    width,
+                    height,
+                    color: View.colors[block.type]
+                });
             }
         }
     }
 
-    renderPanel({level, score, lines, nextPiece}) {
-        this.context.textAlign = 'start';
-        this.context.textBaseline = 'top';
-        this.context.fillStyle = 'white';
-
-        this.context.fillText(`Score: ${score}`, 0, 0)
-        this.context.fillText(`Lines: ${lines}`, 0, 0)
-        this.context.fillText(`Level: ${level}`, 0, 0)
-    }
-
-    renderBlock(x, y, width, height, color) {
+    _renderBlock({ x, y, width, height, lineWidth = 2, color = 'black' }) {
         this.context.fillStyle = color;
         this.context.strokeStyle = 'black';
-        this.context.lineWidth = 2;
-
+        this.context.lineWidth = lineWidth;
         this.context.fillRect(x, y, width, height);
         this.context.strokeRect(x, y, width, height);
     }
