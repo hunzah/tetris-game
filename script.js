@@ -1,33 +1,18 @@
 import Game from './src/game.js';
 import View from './src/view.js';
+import Controller from './src/controller.js';
 
-const root = document.querySelector('.root');
+const GRID_ROWS = 20;
+const GRID_COLUMNS = 10;
 
-const game = new Game()
-const view = new View(root, 320, 640, 20, 10)
+const element = document.querySelector('#root');
 
-window.game = game;
-window.view = view;
-
-document.addEventListener('keydown', event => {
-    switch(event.keyCode){
-        case 37:
-            game.movePieceLeft();
-            view.render(game.getState());
-            break;
-        case 38:
-            game.rotatePiece();
-            view.render(game.getState());
-            break;
-        case 39:
-            game.movePieceRight();
-            view.render(game.getState());
-            break; 
-        case 40:
-            game.movePieceDown();
-            view.render(game.getState());
-            break; 
-    }
+const game = new Game(GRID_ROWS, GRID_COLUMNS);
+const view = new View({
+    element,
+    width: 480,
+    height: 640,
+    rows: GRID_ROWS,
+    columns: GRID_COLUMNS
 });
-
-view.render()
+const controller = new Controller(game, view);
