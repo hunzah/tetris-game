@@ -28,7 +28,7 @@ export default class View {
     render(playfield){
         this.clearScreen();
         this.renderPlayfield(playfield)
-        console.log(playfield);
+        this.renderPanel()
     }
 
     renderPlayfield( playfield ) {
@@ -52,6 +52,16 @@ export default class View {
                 }
             }
         }
+    }
+
+    renderPanel({level, score, lines, nextPiece}) {
+        this.context.textAlign = 'start';
+        this.context.textBaseline = 'top';
+        this.context.fillStyle = 'white';
+
+        this.context.fillText(`Score: ${score}`, 0, 0)
+        this.context.fillText(`Lines: ${lines}`, 0, 0)
+        this.context.fillText(`Level: ${level}`, 0, 0)
     }
 
     renderBlock(x, y, width, height, color) {
