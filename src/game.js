@@ -2,28 +2,7 @@ export default class Game {
     score = 0;
     lines = 0;
     level = 0;
-    playfield = [
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,1,1,1,0,0,0],
-        [0,0,0,0,0,1,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],       
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],       
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-    ];
+    playfield = this.createPlayfield();
     activePieceX = 0;
     activePieceY = 0;
     activePiece = {
@@ -58,12 +37,48 @@ export default class Game {
         ]
     };
 
+    getState() {
+        const playfield = this.createPlayfield
+        const {x: piecX, y: pieceY, blocks} = this.activePiece
+
+        for (let y = 0; y < this.playfield.length; y++) {
+            playfield[y] = []
+            for (let x = 0; x < this.playfield[y].length; x++) {
+                playfield[pieceY + y][piecX + x] = this.playfield[y][x]
+            }
+        }
+
+        
+        for (let y = 0; y < this.activePiece.blocks.length; y++) {
+            for (let x = 0; x < this.activePiece.blocks[y].length; x++) {
+                if (this.activePiece.blocks[y][x]){
+                    playfield[this.activePiece.y +y][this.activePiece.x + x] = this.activePiece.blocks[y][x];
+                }
+            }
+        }
+
+        return {
+            playfield
+        };
+    }
+
+    createPlayfield () {
+        const playfield = []
+        for (let y = 0; y < 20; y++) {
+            playfield[y] = []
+            for (let x = 0; x < 10; x++) {
+                playfield[y][x] = 0
+            }
+        }
+        return playfield
+    }
     movePieceLeft() {
         this.activePiece.x -= 1
 
         if (this.hasCollision()) {
             this.activePiece.x +=1
         }
+        console.log('lef');
     }
 
     movePieceRight() {
@@ -87,6 +102,17 @@ export default class Game {
             this.activePiece.rotationIndex = this.activePiece.rotationIndex > 0 ? this.activePiece.rotationIndex - 1 : 3;
         }
         return this.activePiece.blocks
+        // const blocks = this.activePiece.blocks
+        // const length = blocks.length
+        // const x = Math.floor(length / 2)
+        // const y = length - 1
+        // for (let i = 0; i < x; i++) {
+        //     for (let j = i; j < y - 1 ; j++) {
+        //         const temp = blocks[i][j];
+
+        //         blocks[i][j] = blocks[]
+        //     }
+        // }
     }
     hasCollision() {
         const blocks = this.activePiece.blocks
