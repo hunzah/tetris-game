@@ -208,10 +208,30 @@ export default class Game {
 
     clearLines() {
         const rows = 20;
+        const columns = 10;
         let lines = []
 
-        for (let y = rows - 1; y < lines.length; y++){
-            const element = array[y]
+        for (let y = rows - 1; y >=0; y--){
+            let numberOfBlocks = 0
+
+            for (let x = 0; x< columns; x++){
+                if (this.playfield[y][x]) {
+                 numberOfBlocks += 1;
+                }
+            }
+            if (numberOfBlocks === 0) {
+                break;
+            }
+            else if (numberOfBlocks < columns) {
+                continue
+            }
+            else if (numberOfBlocks === columns) {
+                lines.unshift(y)
+            }
+            for (let index of lines) {
+                this.playfield.splice(index, 1)
+                this.playfield.unshift(new Array(columns).fill)
+            }
         }
     }
 
