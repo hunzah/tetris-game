@@ -47,7 +47,7 @@ export default class View {
         this.context.font = '18px "Press Start 2P"';
         this.context.textAlign = 'center';
         this.context.textBaseline = 'middle';
-        this.context.fillText('Press ENTER to Start', this.width / 2, this.height / 2);
+        this.context.fillText('Нажмите ENTER что бы начать', this.width / 2, this.height / 2);
     }
 
     renderMainScreen(state) {
@@ -65,7 +65,7 @@ export default class View {
         this.context.textAlign = 'center';
         this.context.textBaseline = 'middle';
         this.context.fillText('PAUSE', this.width / 2, this.height / 2 - 48);
-        this.context.fillText('Press ENTER to Resume', this.width / 2, this.height / 2);
+        this.context.fillText('Нажмите ENTER что бы продолжить', this.width / 2, this.height / 2);
     }
 
     renderEndScreen({ score }) {
@@ -75,9 +75,22 @@ export default class View {
         this.context.font = '18px "Press Start 2P"';
         this.context.textAlign = 'center';
         this.context.textBaseline = 'middle';
-        this.context.fillText('GAME OVER', this.width / 2, this.height / 2 - 48);
-        this.context.fillText(`Score: ${score}`, this.width / 2, this.height / 2);
-        this.context.fillText('Press ENTER to Restart', this.width / 2, this.height / 2 + 48);
+        this.context.fillText('ИГРА ОКОНЧЕНА', this.width / 2, this.height / 2 - 48);
+        this.context.fillText(`Рекорд: ${score}`, this.width / 2, this.height / 2);
+        if (score > 150 && score < 350) {
+            this.context.fillText(`Вы выйграли скидку 10%!`, this.width / 2, this.height / 2 + 96);
+            this.context.fillText(`Ваш промокод "Wildberries"`, this.width / 2, this.height / 2 + 144);
+
+        } else if (score >= 350) {
+            this.context.fillText(`Вы выйграли скидку 15%!`, this.width / 2, this.height / 2 + 96);
+            this.context.fillText(`Ваш промокод "Wildberries"`, this.width / 2, this.height / 2 + 144);
+
+        } else {
+            this.context.fillText(`Вы выйграли скидку 5%!`, this.width / 2, this.height / 2 + 96);
+            this.context.fillText(`по промокоду "Wildberries"`, this.width / 2, this.height / 2 + 144);
+
+        }        
+        this.context.fillText('Нажмите ENTER что бы начать', this.width / 2, this.height / 2 + 299);
     }
 
     _clearScreen(color = 'black') {
@@ -86,7 +99,7 @@ export default class View {
     }
 
     _renderBorder() {
-        this.context.strokeStyle = 'white';
+        this.context.strokeStyle = '#cb11ab';
         this.context.lineWidth = this.playfieldBorderWidth;
         this.context.strokeRect(0, 0, this.playfieldWidth, this.playfieldHeight);
     }
@@ -121,7 +134,7 @@ export default class View {
     _renderPanel({ level, score, lines, nextPiece }) {
         this.context.textAlign = 'start';
         this.context.textBaseline = 'top';
-        this.context.fillStyle = 'white';
+        this.context.fillStyle = '#cb11ab';
         this.context.font = '14px "Press Start 2P"';
 
         this.context.fillText(`Level: ${level}`, this.panelX, this.panelY + 0);

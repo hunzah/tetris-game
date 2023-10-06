@@ -9,11 +9,13 @@ body {
 }
 
 #root h1 {
-    font-family: 'Press Start 2P', Consolas, monospace;
     color: white;
 }
+#root h2 {
+    color: #cb11ab;
+    margin-bottom: 32px;
+}
+
 
 #root canvas {
-    display: block;
-    margin: 0 auto;
 }
