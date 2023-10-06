@@ -6,8 +6,8 @@ export default class Game {
     activePieceX = 0;
     activePieceY = 0;
     activePiece = {
-        x:0,
-        y:0,
+        x: 0,
+        y: 0,
         get blocks(){ 
             return this.rotations[this.rotationIndex];
     },
@@ -37,13 +37,11 @@ export default class Game {
         ]
     };
 
+    nextPiece = this.createPiece();
+
     getState() {
         const playfield = this.createPlayfield();
-        const {
-          y: pieceY,
-          x: pieceX,
-          blocks
-        } = this.activePiece;
+        const { x: pieceX, y: pieceY, blocks } = this.activePiece;
     
         for (let y = 0; y < this.playfield.length; y += 1) {
           playfield[y] = [];
@@ -164,6 +162,8 @@ export default class Game {
 
         if (this.hasCollision()) {
             this.activePiece.y -=1
+            this.lockPiece();
+            this.updatePieces();
         }
     }
     rotatePiece(){
@@ -206,9 +206,19 @@ export default class Game {
         }
     }
 
+    clearLines() {
+        const rows = 20;
+        let lines = []
+
+        for (let y = rows - 1; y < lines.length; y++){
+            const element = array[y]
+        }
+    }
+
     updatePieces() {
         this.activePiece = this.nextPiece
         this.nextPiece = this.createPiece()
+        this.activePiece.rotationIndex = 0;
     }
 } 
 
