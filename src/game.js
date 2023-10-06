@@ -38,30 +38,31 @@ export default class Game {
     };
 
     getState() {
-        const playfield = this.createPlayfield
-        const {x: piecX, y: pieceY, blocks} = this.activePiece
-
-        for (let y = 0; y < this.playfield.length; y++) {
-            playfield[y] = []
-            for (let x = 0; x < this.playfield[y].length; x++) {
-                playfield[pieceY + y][piecX + x] = this.playfield[y][x]
-            }
+        const playfield = this.createPlayfield();
+        const {
+          y: pieceY,
+          x: pieceX,
+          blocks
+        } = this.activePiece;
+    
+        for (let y = 0; y < this.playfield.length; y += 1) {
+          playfield[y] = [];
+    
+          for (let x = 0; x < this.playfield[y].length; x += 1) {
+            playfield[y][x] = this.playfield[y][x];
+          }
         }
-
-        
-        for (let y = 0; y < this.activePiece.blocks.length; y++) {
-            for (let x = 0; x < this.activePiece.blocks[y].length; x++) {
-                if (this.activePiece.blocks[y][x]){
-                    playfield[this.activePiece.y +y][this.activePiece.x + x] = this.activePiece.blocks[y][x];
-                }
+    
+        for (let y = 0; y < blocks.length; y += 1) {
+          for (let x = 0; x < blocks[y].length; x += 1) {
+            if (blocks[y][x]) {
+              playfield[pieceY + y][pieceX + x] = blocks[y][x];
             }
+          }
         }
-
-        return {
-            playfield
-        };
+        return playfield
     }
-
+    
     createPlayfield () {
         const playfield = []
         for (let y = 0; y < 20; y++) {
@@ -72,6 +73,75 @@ export default class Game {
         }
         return playfield
     }
+
+    createPiece() {
+        const index = Math.floor(Math.random() * 7);
+        const type = 'IJLOSTZ'[index]
+        const piece = {}
+
+
+        switch (type) {
+            case 'I':
+              piece.blocks = [
+                [0, 0, 0, 0],
+                [1, 1, 1, 1],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0]
+              ];
+              break;
+            case 'J':
+              piece.blocks = [
+                [0, 0, 0],
+                [2, 2, 2],
+                [0, 0, 2],
+              ];
+              break;
+            case 'L':
+              piece.blocks = [
+                [0, 0, 0],
+                [3, 3, 3],
+                [3, 0, 0],
+              ];
+              break;
+            case 'O':
+              piece.blocks = [
+                [0, 0, 0, 0],
+                [0, 4, 4, 0],
+                [0, 4, 4, 0],
+                [0, 0, 0, 0]
+              ];
+              break;
+            case 'S':
+              piece.blocks = [
+                [0, 0, 0],
+                [0, 5, 5],
+                [5, 5, 0],
+              ];
+              break;
+            case 'T':
+              piece.blocks = [
+                [0, 0, 0],
+                [6, 6, 6],
+                [0, 6, 0],
+              ];
+              break;
+            case 'Z':
+              piece.blocks = [
+                [0, 0, 0],
+                [7, 7, 0],
+                [0, 7, 7],
+              ];
+              break;
+            default:
+              throw new Error(`Unknown type of piece: ${type}`);
+          }
+      
+          piece.x = Math.floor((10 - piece.blocks[0].length) / 2);
+          piece.y = -1;
+      
+          return piece;
+    }
+
     movePieceLeft() {
         this.activePiece.x -= 1
 
@@ -102,22 +172,11 @@ export default class Game {
             this.activePiece.rotationIndex = this.activePiece.rotationIndex > 0 ? this.activePiece.rotationIndex - 1 : 3;
         }
         return this.activePiece.blocks
-        // const blocks = this.activePiece.blocks
-        // const length = blocks.length
-        // const x = Math.floor(length / 2)
-        // const y = length - 1
-        // for (let i = 0; i < x; i++) {
-        //     for (let j = i; j < y - 1 ; j++) {
-        //         const temp = blocks[i][j];
-
-        //         blocks[i][j] = blocks[]
-        //     }
-        // }
     }
     hasCollision() {
         const blocks = this.activePiece.blocks
         const {x: piecX, y: pieceY} = this.activePiece
-        const {playfield} = this.playfield
+        const playfield = this.playfield
 
 
         for (let y = 0; y < blocks.length; y++){
@@ -146,4 +205,10 @@ export default class Game {
             }
         }
     }
+
+    updatePieces() {
+        this.activePiece = this.nextPiece
+        this.nextPiece = this.createPiece()
+    }
 } 
+
