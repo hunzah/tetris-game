@@ -9,7 +9,11 @@ body {
 }
 
 .root h1 {
-    color:aliceblue
+    color:#c5cb11;
+}
+
+.root h2  {
+    color:#cb11ab;
 }
 
 
