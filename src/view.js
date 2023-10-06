@@ -9,7 +9,7 @@ export default class View {
         '7': 'red'
     }
 
-    constructor(element, width, height, rows, columns) {
+    constructor({ element, width, height, rows, columns }) {
         this.element = element;
         this.width = width;
         this.height = height;
@@ -19,8 +19,21 @@ export default class View {
         this.canvas.height = this.height;
         this.context = this.canvas.getContext('2d');
 
-        this.blockWidth = this.width / columns;
-        this.blockHeight = this.height / rows;
+        this.playfieldBorderWidth = 4;
+        this.playfieldX = this.playfieldBorderWidth;
+        this.playfieldY = this.playfieldBorderWidth;
+        this.playfieldWidth = this.width * 2 / 3;
+        this.playfieldHeight = this.height;
+        this.playfieldInnerWidth = this.playfieldWidth - this.playfieldBorderWidth * 2;
+        this.playfieldInnerHeight = this.playfieldHeight - this.playfieldBorderWidth * 2;
+
+        this.blockWidth = this.playfieldInnerWidth / columns;
+        this.blockHeight = this.playfieldInnerHeight / rows;
+
+        this.panelX = this.playfieldWidth + 10;
+        this.panelY = 0;
+        this.panelWidth = this.width / 3;
+        this.panelHeight = this.height;
 
         this.element.appendChild(this.canvas);
     }

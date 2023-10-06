@@ -30,3 +30,4 @@ document.addEventListener('keydown', event => {
     }
 });
 
+view.render()
