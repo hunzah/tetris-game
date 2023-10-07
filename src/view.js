@@ -83,7 +83,7 @@ export default class View {
 
         } else if (score >= 350) {
             this.context.fillText(`Вы выйграли скидку 15%!`, this.width / 2, this.height / 2 + 96);
-            this.context.fillText(`Ваш промокод "Wildberries"`, this.width / 2, this.height / 2 + 144);
+            this.context.fillText(`по промокоду "Wildberries"`, this.width / 2, this.height / 2 + 144);
 
         } else {
             this.context.fillText(`Вы выйграли скидку 5%!`, this.width / 2, this.height / 2 + 96);
